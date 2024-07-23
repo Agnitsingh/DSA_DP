@@ -1,0 +1,46 @@
+class Solution {
+public:
+
+    int maxRob(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n, 0);
+        dp[0] = nums[0];
+
+        for(int i=1; i<n; i++)
+        {
+            int take = nums[i];
+            if(i>1)
+            {
+                take = take + dp[i-2];
+            }
+
+            int notTake = 0 + dp[i-1];
+
+            dp[i] = max(take, notTake);
+        }
+
+        return dp[n-1];
+        
+    }    
+
+    int rob(vector<int>& nums) {
+        vector<int> temp1;
+        vector<int> temp2;
+
+        for(int i=1; i<nums.size(); i++)
+        {
+            temp1.push_back(nums[i]);
+        }
+
+        for(int i=0; i<nums.size()-1; i++)
+        {
+            temp2.push_back(nums[i]);
+        }
+
+        if(nums.size() == 1) return nums[0];
+
+        int ans1 = maxRob(temp1);
+        int ans2 = maxRob(temp2);
+        return max(ans1, ans2);
+    }
+};
