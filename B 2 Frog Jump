@@ -1,0 +1,21 @@
+class Solution {
+  public:
+    
+    int minEnergy(vector<int> &height, int index, vector<int> &dp)
+    {
+        if(index == 0) return 0;
+        if(index == 1) return abs(height[1]-height[0]);
+        
+        if(dp[index]!=-1) return dp[index];
+        
+        int stepOne = minEnergy(height, index-1, dp) + abs(height[index]-height[index-1]);
+        int stepTwo = minEnergy(height, index-2, dp) + abs(height[index]-height[index-2]);
+        
+        return dp[index] = min(stepOne, stepTwo);
+    }
+  
+    int minimumEnergy(vector<int>& height, int n) {
+        vector<int> dp(n+1, -1);
+        return minEnergy(height, n-1, dp);
+    }
+};
