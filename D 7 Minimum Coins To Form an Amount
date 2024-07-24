@@ -1,0 +1,62 @@
+class Solution {
+public:
+
+    int function(int index, int amount, vector<int> &coins)
+    {
+        if(index == 0)
+        {
+            if(amount%coins[0] == 0) return amount/coins[0];
+            else return 1e8;
+        }
+
+        int nT = function(index-1, amount, coins);
+        int T = 1e8;
+        if(coins[index]<=amount)
+        {
+            T =  1 + function(index, amount-coins[index], coins);
+        }
+
+        return min(T, nT);
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        int ans = function(n-1, amount, coins);
+        if(ans == 1e8) return -1;
+        return ans;
+    }
+};
+
+// MEMOIZATION..
+
+class Solution {
+public:
+
+    int function(int index, int amount, vector<int> &coins, vector<vector<int>> &dp)
+    {
+        if(index == 0)
+        {
+            if(amount%coins[0] == 0) return amount/coins[0];
+            else return 1e8;
+        }
+
+        if(dp[index][amount]!=-1) return dp[index][amount];
+
+        int nT = function(index-1, amount, coins, dp);
+        int T = 1e8;
+        if(coins[index]<=amount)
+        {
+            T =  1 + function(index, amount-coins[index], coins, dp);
+        }
+
+        return dp[index][amount] = min(T, nT);
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        vector<vector<int>> dp(n, vector<int>(amount+1, -1));
+        int ans = function(n-1, amount, coins, dp);
+        if(ans == 1e8) return -1;
+        return ans;
+    }
+};
