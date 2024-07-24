@@ -1,0 +1,44 @@
+// Recursion
+
+class Solution {
+public:
+
+    int unique(int index1, int index2)
+    {
+        if(index1 == 0 && index2 == 0) return 1;
+        if(index1<0 || index2<0) return 0;
+
+        int upward = unique(index1-1, index2);
+        int leftward = unique(index1, index2-1);
+
+        return upward+leftward;
+    }
+
+    int uniquePaths(int m, int n) {
+        return unique(m-1, n-1);
+    }
+};
+
+// MEMOIZATION
+
+class Solution {
+public:
+
+    int unique(int index1, int index2, vector<vector<int>> &dp)
+    {
+        if(index1 == 0 && index2 == 0) return 1;
+        if(index1<0 || index2<0) return 0;
+
+        if(dp[index1][index2]!=-1) return dp[index1][index2];
+
+        int upward = unique(index1-1, index2, dp);
+        int leftward = unique(index1, index2-1, dp);
+
+        return dp[index1][index2] = upward+leftward;
+    }
+
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int>(n,-1));
+        return unique(m-1, n-1, dp);
+    }
+};
