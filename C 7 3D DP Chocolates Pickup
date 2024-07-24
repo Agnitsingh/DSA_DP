@@ -1,0 +1,48 @@
+class Solution {
+  public:
+    
+    int function(int same, int index1, int index2, vector<vector<int>>& grid, vector<vector<vector<int>>> &dp)
+    {   
+        int n = grid.size();
+        int m = grid[0].size();
+        
+        // Base Case
+        if(index1<0 || index2<0 || index1>=m || index2>=m) return -1e8;
+        
+        if(same == n-1)
+        {
+            if(index1 == index2) return grid[n-1][index1];
+            else return grid[n-1][index1] + grid[n-1][index2];
+        }
+        
+        if(dp[same][index1][index2] != -1) return dp[same][index1][index2];
+        
+        // Explore all cases..
+        
+        int maxi = 0;
+        
+        for(int change1 = -1; change1<=1; change1++)
+        {
+            for(int change2 = -1; change2<=1; change2++)
+            {   
+                int value = 0;
+                if(index1 == index2)
+                {
+                    value = grid[same][index1] + function(same+1, index1+change1, index2+change2, grid, dp);
+                }
+                else{
+                    value = grid[same][index1] + grid[same][index2] + function(same+1, index1+change1, index2+change2, grid, dp);
+                }
+                
+                maxi = max(maxi, value);
+            }
+        }
+        
+        return dp[same][index1][index2] = maxi;
+    }
+  
+    int solve(int n, int m, vector<vector<int>>& grid) {
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(m, vector<int>(m,-1)));
+        return function(0,0,m-1,grid, dp);
+    }
+};
