@@ -1,0 +1,78 @@
+// Recursion
+
+class Solution {
+public:
+
+    int minSum(int index1, int index2, vector<vector<int>>& grid)
+    {
+        if(index1 == 0 && index2 == 0) return grid[index1][index2];
+        if(index1<0 || index2<0) return 1e9;
+
+        int up = grid[index1][index2] + minSum(index1-1, index2, grid);
+        int left = grid[index1][index2] + minSum(index1, index2-1, grid);
+
+        return min(up,left);
+    }
+
+    int minPathSum(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        return minSum(n-1, m-1, grid);
+    }
+};
+
+// Memoization
+
+class Solution {
+public:
+
+    int minSum(int index1, int index2, vector<vector<int>>& grid, vector<vector<int>> &dp)
+    {
+        if(index1 == 0 && index2 == 0) return grid[index1][index2];
+        if(index1<0 || index2<0) return 1e9;
+
+        if(dp[index1][index2] != -1) return dp[index1][index2];
+        int up = grid[index1][index2] + minSum(index1-1, index2, grid, dp);
+        int left = grid[index1][index2] + minSum(index1, index2-1, grid, dp);
+
+        return dp[index1][index2] = min(up,left);
+    }
+
+    int minPathSum(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        vector<vector<int>> dp(n, vector<int>(m,-1));
+        return minSum(n-1, m-1, grid, dp);
+    }
+};
+
+// Tabulation..
+
+    int minTab(vector<vector<int>>& grid)
+    {
+        int n = grid.size();
+        int m = grid[0].size();
+        vector<vector<int>> dp(n, vector<int>(m,0));
+
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                if(i==0 && j == 0) dp[i][j] = grid[0][0];
+                else
+                {   
+                    int right = grid[i][j];
+                    int down = grid[i][j];
+
+                    if(i>0) right = right + dp[i-1][j];
+                    else right = 1e9;
+                    if(j>0) down = down + dp[i][j-1];
+                    else down = 1e9;
+                    dp[i][j] = min(right, down);
+                }
+                
+            }
+        }
+        return dp[n-1][m-1];
+    }
+
