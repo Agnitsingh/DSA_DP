@@ -1,0 +1,43 @@
+// RECURSION
+
+class Solution {
+public:
+
+    int minTotal(vector<vector<int>>& triangle, int index1, int index2)
+    {
+        if(index1 == triangle.size()-1) return triangle[triangle.size()-1][index2];
+
+        int down = triangle[index1][index2] + minTotal(triangle, index1+1, index2);
+        int diagonal = triangle[index1][index2] + minTotal(triangle, index1+1, index2+1);
+
+        return min(down,diagonal);
+    }
+
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int n = triangle.size(); // Rows
+        return minTotal(triangle, 0, 0);
+    }
+};
+
+// MEMOIZATION
+
+class Solution {
+public:
+
+    int minTotal(vector<vector<int>>& triangle, int index1, int index2, vector<vector<int>> &dp)
+    {
+        if(index1 == triangle.size()-1) return triangle[triangle.size()-1][index2];
+        if(dp[index1][index2]!=-1) return dp[index1][index2];
+
+        int down = triangle[index1][index2] + minTotal(triangle, index1+1, index2, dp);
+        int diagonal = triangle[index1][index2] + minTotal(triangle, index1+1, index2+1, dp);
+
+        return dp[index1][index2] = min(down,diagonal);
+    }
+
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int n = triangle.size(); // Rows
+        vector<vector<int>> dp(n, vector<int>(n,-1));
+        return minTotal(triangle, 0, 0, dp);
+    }
+};
