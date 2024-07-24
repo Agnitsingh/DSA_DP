@@ -1,0 +1,105 @@
+// RECURSION
+
+class Solution
+{
+    public:
+    //Function to return max value that can be put in knapsack of capacity W.
+    
+    int function(int index, int weight, int wt[], int val[])
+    {
+        
+        if(index == 0)
+        {
+            if(wt[0]<=weight) return val[0];
+            else return 0;
+        }
+        
+        int notTake = function(index-1, weight, wt, val);
+        int Take = -1e8;
+        if(wt[index]<=weight)
+        {
+            Take = val[index] + function(index-1, weight-wt[index], wt, val);
+        }
+        
+        return max(Take, notTake);
+    }
+    
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       return function(n-1, W, wt, val);
+    }
+};
+
+// MEMOIZATION
+
+class Solution
+{
+    public:
+    //Function to return max value that can be put in knapsack of capacity W.
+    
+    int function(int index, int weight, int wt[], int val[],  vector<vector<int>> &dp)
+    {
+        
+        if(index == 0)
+        {
+            if(wt[0]<=weight) return val[0];
+            else return 0;
+        }
+        
+        if(dp[index][weight]!=-1) return dp[index][weight];
+        
+        int notTake = function(index-1, weight, wt, val, dp);
+        int Take = -1e8;
+        if(wt[index]<=weight)
+        {
+            Take = val[index] + function(index-1, weight-wt[index], wt, val, dp);
+        }
+        
+        return dp[index][weight] = max(Take, notTake);
+    }
+    
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        vector<vector<int>> dp(n, vector<int>(W+1, -1));
+       return function(n-1, W, wt, val, dp);
+    }
+};
+
+// TABULATION
+
+class Solution
+{
+    public:
+    //Function to return max value that can be put in knapsack of capacity W.
+
+    
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        vector<vector<int>> dp(n, vector<int>(W+1, 0));
+        
+        // BASE CASE...
+        
+        for(int i=0; i<=W; i++)
+        {
+            if(wt[0]<=i)
+            {
+                dp[0][i] = val[0];
+            }
+        }
+        
+        for(int index=1; index<n; index++)
+        {
+            for(int weight=0; weight<=W; weight++)
+            {
+                int notTake = dp[index-1][weight];
+                int Take = -1e8;
+                if(wt[index]<=weight)
+                {
+                    Take = val[index] + dp[index-1][weight-wt[index]];
+                }
+                dp[index][weight] = max(notTake, Take);
+            }
+        }
+        return dp[n-1][W];
+    }
+};
