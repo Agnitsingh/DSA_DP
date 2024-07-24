@@ -1,0 +1,40 @@
+class Solution {
+  public:
+  
+    int mod = 1e9+7;
+	
+	int mem(int index, vector<int>& arr, int target, vector<vector<int>> &dp)
+	{
+        
+        if(index == 0)
+        {
+            if(target == 0 && arr[0] == 0) return 2;
+            if(target == 0 || target == arr[0]) return 1;
+            return 0;
+        }
+	    
+	    if(dp[index][target]!=-1) return dp[index][target];
+	    
+	    int take = 0;
+	    if(target>= arr[index]) take = mem(index-1, arr, target-arr[index], dp);
+	    int notTake = mem(index-1, arr, target, dp);
+	    
+	    return dp[index][target] = (take+notTake)%mod;
+	}
+  
+    int countPartitions(int n, int d, vector<int>& arr) {
+        int totSum = 0;
+        for(int i=0; i<n; i++)
+        {
+            totSum = totSum + arr[i];
+        }
+        
+        int sum = totSum-d;
+        if(sum>=0 && sum%2 == 0)
+        {   
+            vector<vector<int>> dp(n, vector<int>(sum/2+1, -1));
+            return mem(n-1, arr, sum/2, dp);
+        }
+        else return 0;
+    }
+};
