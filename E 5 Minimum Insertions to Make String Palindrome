@@ -1,0 +1,35 @@
+class Solution {
+public:
+
+        int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.length();
+        int m = text2.length();
+        vector<vector<int>> dp(n+1, vector<int>(m+1,0));
+        
+        // Handling BASE CASE...
+        for(int j=0; j<=m; j++) dp[0][j] = 0;
+        for(int i=0; i<=n; i++) dp[i][0] = 0;
+
+        for(int index1=1; index1<=n; index1++)
+        {
+            for(int index2=1; index2<=m; index2++)
+            {
+                if(text1[index1-1] == text2[index2-1]) dp[index1][index2] = 1 + dp[index1-1][index2-1];
+                else dp[index1][index2] = 0 + max(dp[index1-1][index2], dp[index1][index2-1]);
+            }
+        }
+
+        return dp[n][m];
+    }
+
+    int longestPalindromeSubseq(string s) {
+        string rev = s;
+        reverse(rev.begin(), rev.end());
+        return longestCommonSubsequence(s, rev);
+    }
+
+    int minInsertions(string s) {
+        int pal = longestPalindromeSubseq(s);
+        return s.length()-pal;
+    }
+};
