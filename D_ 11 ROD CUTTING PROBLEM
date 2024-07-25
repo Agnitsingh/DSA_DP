@@ -1,0 +1,27 @@
+class Solution{
+  public:
+    
+    int fun(int index, int n, int price[], vector<vector<int>> &dp)
+    {
+        if(index==0)
+        {
+            return n*price[0];
+        }
+        
+        if(dp[index][n] != -1) return dp[index][n];
+        
+        int nT = 0 + fun(index-1, n, price, dp);
+        int T = -1e8;
+        if(index+1<=n)
+        {
+            T = price[index] + fun(index, (n-(index+1)), price, dp);
+        }
+        
+        return dp[index][n] = max(T,nT);
+    }
+  
+    int cutRod(int price[], int n) {
+        vector<vector<int>> dp(n, vector<int>(n+1, -1));
+        return fun(n-1, n, price, dp);
+    }
+};
