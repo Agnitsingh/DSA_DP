@@ -1,0 +1,85 @@
+// RECURSION...
+
+class Solution {
+public:
+
+    int fun(int index, int prev, vector<int> &nums, int n)
+    {
+        if(index == n) return 0;
+
+        int Take = 0;
+        if(prev == -1 || nums[index]>nums[prev])
+        {
+            Take = 1 + fun(index+1, index, nums, n);
+        }
+
+        int notTake = fun(index+1, prev, nums, n);
+
+        return max(Take, notTake);
+    }
+
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        //vector<vector<int>> dp(n+1, vector<int>(n+1, -1));
+        return fun(0, -1, nums, n);
+    }
+};
+
+// 1 BASE INDEXING + MEMOIZATION...
+
+class Solution {
+public:
+
+    int fun(int index, int prev, vector<int> &nums, int n, vector<vector<int>> &dp)
+    {
+        if(index == n+1) return 0;
+
+        if(dp[index][prev] != -1) return dp[index][prev];
+
+        int Take = 0;
+        if(prev == 0 || nums[index-1]>nums[prev-1])
+        {
+            Take = 1 + fun(index+1, index, nums, n, dp);
+        }
+
+        int notTake = fun(index+1, prev, nums, n, dp);
+
+        return dp[index][prev] = max(Take, notTake);
+    }
+
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n+1, vector<int>(n+1, -1));
+        return fun(1, 0, nums, n, dp);
+    }
+};
+
+// TABULATION
+
+class Solution {
+public:
+
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n+2, vector<int>(n+1, 0));
+        
+        for(int index=n; index>=1; index--)
+        {
+            for(int prev=index-1; prev>=0; prev--)
+            {
+                
+                int Take = 0;
+                if(prev == 0 || nums[index-1]>nums[prev-1])
+                {
+                    Take = 1 + dp[index+1][index];
+                }
+
+                int notTake = dp[index+1][prev];
+
+                dp[index][prev] = max(Take, notTake);
+            }
+        }
+
+        return dp[1][0];
+    }
+};
