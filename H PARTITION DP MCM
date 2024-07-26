@@ -1,0 +1,25 @@
+public:
+    
+    int fun(int start, int last, int arr[], vector<vector<int>> &dp)
+    {
+        
+        if(start == last) return 0;
+        
+        if(dp[start][last]!=-1) return dp[start][last];
+        
+        int mini = 1e9;
+        for(int k=start; k<last; k++)
+        {
+            int ans = ((arr[start-1])*(arr[k])*(arr[last])) + fun(start,k,arr, dp) + fun(k+1, last,arr, dp);
+            mini = min(mini,ans);
+        }
+        
+        return dp[start][last] = mini;
+    }
+
+    int matrixMultiplication(int N, int arr[])
+    {
+        vector<vector<int>> dp(N, vector<int>(N,-1));
+        return fun(1, N-1, arr,dp);
+    }
+};
