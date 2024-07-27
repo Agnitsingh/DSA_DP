@@ -1,0 +1,72 @@
+class Solution{
+public:
+
+    int mod = 1003;
+    
+    int fun(int start, int end, bool isTrue, string s, vector<vector<vector<int>>> &dp)
+    {
+        if(start>end) return 0;
+        
+        if(start == end)
+        {
+            if(isTrue) return s[start] == 'T';
+            else return s[start] == 'F';
+        }
+        
+        if(dp[start][end][isTrue]!=-1) return dp[start][end][isTrue];
+        
+        int ways = 0;
+        
+        for(int index = start+1; index<end; index = index+2)
+        {
+            int lt = fun(start, index-1, 1, s, dp);
+            int lf = fun(start, index-1, 0, s, dp);
+            int rt = fun(index+1, end, 1, s, dp);
+            int rf = fun(index+1, end, 0, s, dp);
+            
+            if(s[index] == '&')
+            {
+                if(isTrue)
+                {
+                    ways = ways + ((lt*rt)%mod)%mod;
+                }
+                else
+                {
+                    ways = ways + ((lt*rf)%mod + (lf*rt)%mod + (lf*rf)%mod)%mod;
+                }
+            }
+            
+            else if(s[index] == '|')
+            {
+                if(isTrue)
+                {
+                    ways = ways + ((lt*rt)%mod + (lt*rf)%mod + (rt*lf)%mod)%mod;
+                }
+                else
+                {
+                    ways = ways + (lf*rf)%mod;
+                }
+            }
+            
+            else
+            {
+                if(isTrue)
+                {
+                    ways = ways + ((lt*rf)%mod + (lf*rt)%mod)%mod;
+                }
+                else
+                {
+                    ways = ways + ((lt*rt)%mod + (lf*rf)%mod)%mod;
+                }
+            }
+            
+        }
+        dp[start][end][isTrue] = ways;
+        return dp[start][end][isTrue]%mod;
+    }
+
+    int countWays(int n, string s){
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(2,-1)));
+        return fun(0, n-1, 1, s, dp);
+    }
+};
