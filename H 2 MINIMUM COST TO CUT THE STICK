@@ -1,0 +1,57 @@
+class Solution {
+public:
+
+    int fun(int start, int end, vector<int> &cuts, vector<vector<int>> &dp)
+    {
+        if(start>end) return 0;
+        if(dp[start][end]!=-1) return dp[start][end];
+        
+        int minCost = 1e9;
+        for(int divide = start; divide<=end; divide++)
+        {
+            int price = (cuts[end+1]-cuts[start-1]) + fun(start, divide-1, cuts, dp) + fun(divide+1,end,cuts,dp);
+            minCost = min(minCost, price);
+        }
+
+        return dp[start][end] = minCost;
+    }
+
+    int minCost(int n, vector<int>& cuts) {
+        sort(cuts.begin(), cuts.end());
+        int size = cuts.size();
+        cuts.push_back(n);
+        cuts.insert(cuts.begin(), 0);
+        vector<vector<int>> dp(size+1, vector<int>(size+1,-1));
+        return fun(1, size, cuts, dp);
+    }
+};
+
+// TABULATION...
+
+class Solution {
+public:
+
+    int minCost(int n, vector<int>& cuts) {
+        sort(cuts.begin(), cuts.end());
+        int size = cuts.size();
+        cuts.push_back(n);
+        cuts.insert(cuts.begin(), 0);
+        vector<vector<int>> dp(size+2, vector<int>(size+2,0));
+
+        for(int start=size; start>=1; start--)
+        {
+            for(int end = 1; end<=size; end++)
+            {
+                if(start>end) continue;
+                int minCost = 1e9;
+                for(int divide = start; divide<=end; divide++)
+                {
+                    int price = (cuts[end+1]-cuts[start-1]) + dp[start][divide-1]+ dp[divide+1][end];
+                    minCost = min(minCost, price);
+                }
+                dp[start][end] = minCost;
+            }
+        }
+        return dp[1][size];
+    }
+};
