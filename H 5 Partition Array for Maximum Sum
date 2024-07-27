@@ -1,0 +1,54 @@
+class Solution{
+    public:
+    
+    int function(int index, int k, int n, vector<int> &arr, vector<int> &dp)
+    {
+        if(index == n) return 0;
+        int length = 0;
+        int maxInPart = -1e8;
+        int maxAns = -1e8;
+        
+        if(dp[index]!=-1) return dp[index];
+        
+        for(int part = index; part<min(n, index+k); part++)
+        {
+            length++;
+            maxInPart = max(maxInPart, arr[part]);
+            int ans = (length*maxInPart) + function(part+1,k,n,arr,dp);
+            maxAns = max(maxAns, ans);
+        }
+        
+        return dp[index] = maxAns;
+    }
+    
+    int solve(int n, int k, vector<int>& arr){
+        vector<int> dp(n,-1);
+        return function(0, k, n, arr, dp);
+    }
+};
+
+// TABULATION
+
+    int solve(int n, int k, vector<int>& arr){
+        vector<int> dp(n+1,0);
+        dp[n] = 0;
+        
+        for(int index = n-1; index>=0; index--)
+        {
+            int length = 0;
+            int maxInPart = -1e8;
+            int maxAns = -1e8;
+        
+            for(int part = index; part<min(n, index+k); part++)
+            {
+                length++;
+                maxInPart = max(maxInPart, arr[part]);
+                int ans = (length*maxInPart) + dp[part+1];
+                maxAns = max(maxAns, ans);
+            }
+        
+            dp[index] = maxAns;
+        }
+        
+        return dp[0];
+    }
