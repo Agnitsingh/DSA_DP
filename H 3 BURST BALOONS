@@ -1,0 +1,26 @@
+class Solution {
+public:
+
+    int fun(int start, int end, vector<int> &arr, vector<vector<int>> &dp)
+    {
+        if(start>end) return 0;
+        int coins = -1e8;
+        
+        if(dp[start][end]!= -1) return dp[start][end];
+        
+        for(int index=start; index<=end; index++)
+        {   
+            // Ek element ko hatne ka cost + isse pehle jo nikle honge..
+            int cost = arr[start-1]*arr[index]*arr[end+1] + fun(start, index-1, arr, dp) + fun(index+1, end, arr, dp);
+            coins = max(coins,cost);
+        }
+        return dp[start][end] = coins;
+    }
+
+    int maxCoins(int N, vector<int> &arr) {
+        arr.push_back(1);
+        arr.insert(arr.begin(),1);
+        vector<vector<int>> dp(N+1, vector<int>(N+1, -1));
+        return fun(1, N, arr, dp);
+    }
+};
