@@ -1,0 +1,82 @@
+class Solution{
+public:
+
+    bool isPalindrome(string s)
+    {
+        int end = s.length()-1;
+        int start = 0;
+        
+        while(start<end)
+        {
+            if(s[start]!=s[end])
+            {
+                return false;
+            }
+            
+            else
+            {
+                start++;
+                end--;
+            }
+        }
+        return true;
+    }
+
+    int function(int index, string str, int n,  vector<int> &dp)
+    {
+        if(index == n) return 0;
+        
+        string check = "";
+        int minCost = 1e9;
+        
+        if(dp[index]!=-1) return dp[index];
+        
+        for(int cut = index; cut<n; cut++)
+        {
+            check += str[cut];
+            if(isPalindrome(check))
+            {
+                int cost = 1 + function(cut+1, str, n, dp);
+                minCost = min(cost, minCost);
+            }
+        }
+        return dp[index] = minCost;
+    }
+
+    int palindromicPartition(string str)
+    {
+        int n = str.length();
+        vector<int> dp(n,-1);
+        return function(0, str,n,dp)-1;
+    }
+};
+
+// TABULATION..
+
+    int palindromicPartition(string str)
+    {
+        int n = str.length();
+        //vector<int> dp(n,-1);
+        vector<int> dp(n+1,0);
+        
+        dp[n] = 0;
+        
+        for(int index=n-1; index>=0; index--)
+        {
+            string check = "";
+            int minCost = 1e9;
+            
+            for(int cut = index; cut<n; cut++)
+            {
+                check += str[cut];
+                if(isPalindrome(check))
+                {
+                    int cost = 1 + dp[cut+1];
+                    minCost = min(cost, minCost);
+                }
+            }
+            dp[index] = minCost;
+        }
+        
+        return dp[0]-1;
+    }
